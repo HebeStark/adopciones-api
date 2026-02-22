@@ -46,6 +46,204 @@
         }
     },
     "components": {
+        "schemas": {
+            "Animal": {
+                "required": [
+                    "id",
+                    "nombre",
+                    "tipo",
+                    "edad",
+                    "estado"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Kyla"
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "enum": [
+                            "Perro",
+                            "Gato"
+                        ],
+                        "example": "Perro"
+                    },
+                    "edad": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "example": 3
+                    },
+                    "estado": {
+                        "type": "string",
+                        "enum": [
+                            "disponible",
+                            "adoptado"
+                        ],
+                        "example": "disponible"
+                    },
+                    "foto": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://api.adopciones.com/storage/animals/kyla.jpg",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-22T14:35:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "ErrorResponse": {
+                "required": [
+                    "success",
+                    "message"
+                ],
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Validation error"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "email": [
+                                "The email field is required."
+                            ],
+                            "password": [
+                                "The password must be at least 8 characters."
+                            ]
+                        },
+                        "nullable": true,
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "SolicitudAdopcion": {
+                "required": [
+                    "id",
+                    "user_id",
+                    "animal_id",
+                    "estado"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "animal_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "estado": {
+                        "type": "string",
+                        "enum": [
+                            "pendiente",
+                            "aprobada",
+                            "rechazada"
+                        ],
+                        "example": "pendiente"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-22T15:10:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "SuccessResponse": {
+                "required": [
+                    "success"
+                ],
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "data": {
+                        "description": "Response payload (object or array)",
+                        "nullable": true
+                    },
+                    "meta": {
+                        "description": "Pagination or additional metadata",
+                        "properties": {
+                            "current_page": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "per_page": {
+                                "type": "integer",
+                                "example": 10
+                            },
+                            "total": {
+                                "type": "integer",
+                                "example": 35
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "required": [
+                    "id",
+                    "name",
+                    "email",
+                    "role"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Hebe Stark"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "hebe@email.com"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "adoptante"
+                        ],
+                        "example": "admin"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-02-22T14:35:00Z"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "BearerAuth": {
                 "type": "http",
