@@ -7,6 +7,8 @@ use App\Http\Requests\AnimalIndexRequest;
 use App\Http\Resources\AnimalResource;
 use App\Services\Animal\AnimalReadService;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\AnimalStoreRequest;
+use App\Services\Animal\AnimalWriteService;
 
 class AnimalController extends Controller
 {
@@ -33,12 +35,24 @@ class AnimalController extends Controller
     }
 
     public function show(\App\Models\Animal $animal): JsonResponse
-{
+    {
     return response()->json([
         'success' => true,
         'data' => new AnimalResource($animal),
     ]);
-}
-   
+    }
+
+    public function store(
+        AnimalStoreRequest $request,
+        AnimalWriteService $writeService
+    ): JsonResponse
+    {
+        $animal = $writeService->create($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'data' => new AnimalResource($animal)
+        ], 201);
+    }     
 
 }
