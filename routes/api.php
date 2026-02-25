@@ -11,4 +11,6 @@ Route::prefix('v1')->group(function () {
 
     Route::post('/animals', [AnimalController::class, 'store']);
 
+     Route::put('animals/{animal}', [AnimalController::class, 'update']);
+
 });
