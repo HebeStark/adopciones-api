@@ -13,4 +13,6 @@ Route::prefix('v1')->group(function () {
 
      Route::put('animals/{animal}', [AnimalController::class, 'update']);
 
+     Route::delete('animals/{animal}', [AnimalController::class, 'destroy']);
+
 });
