@@ -9,6 +9,9 @@ use App\Services\Animal\AnimalReadService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\AnimalStoreRequest;
 use App\Services\Animal\AnimalWriteService;
+use App\Http\Requests\AnimalUpdateRequest;
+use App\Services\Animal\AnimalUpdateService;
+use App\Models\Animal;
 
 class AnimalController extends Controller
 {
@@ -55,4 +58,19 @@ class AnimalController extends Controller
         ], 201);
     }     
 
+    public function update(
+        AnimalUpdateRequest $request,
+        Animal $animal,
+        AnimalUpdateService $service
+    ) {
+        $updatedAnimal = $service->execute(
+            $animal,
+            $request->validated()
+        );
+
+        return response()->json([
+            'success' => true,
+            'data' => new AnimalResource($updatedAnimal)
+        ]);
+    }
 }
