@@ -7,4 +7,6 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/animals', [AnimalController::class, 'index']);
 
+    Route::get('/animals/{animal}', [AnimalController::class, 'show']);
+
 });

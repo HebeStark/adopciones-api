@@ -31,6 +31,14 @@ class AnimalController extends Controller
             ],
         ]);
     }
+
+    public function show(\App\Models\Animal $animal): JsonResponse
+{
+    return response()->json([
+        'success' => true,
+        'data' => new AnimalResource($animal),
+    ]);
+}
    
 
 }
