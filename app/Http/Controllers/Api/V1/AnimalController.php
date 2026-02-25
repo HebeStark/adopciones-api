@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AnimalIndexRequest;
+use App\Http\Requests\AnimalUpdateRequest;
 use App\Http\Resources\AnimalResource;
 use App\Services\Animal\AnimalReadService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\AnimalStoreRequest;
 use App\Services\Animal\AnimalWriteService;
-use App\Http\Requests\AnimalUpdateRequest;
 use App\Services\Animal\AnimalUpdateService;
+
 use App\Models\Animal;
+use App\Services\Animal\AnimalDeleteService;
 
 class AnimalController extends Controller
 {
@@ -37,7 +39,7 @@ class AnimalController extends Controller
         ]);
     }
 
-    public function show(\App\Models\Animal $animal): JsonResponse
+    public function show(Animal $animal): JsonResponse
     {
     return response()->json([
         'success' => true,
@@ -73,4 +75,16 @@ class AnimalController extends Controller
             'data' => new AnimalResource($updatedAnimal)
         ]);
     }
+
+    public function destroy(
+        Animal $animal,
+        AnimalDeleteService $service
+        ) {
+        $service->execute($animal);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Animal eliminado correctamente'
+        ]);
+     }
 }
