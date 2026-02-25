@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('nombre');
             $table->enum('tipo', ['perro','gato']);
             $table->unsignedInteger('edad');
+            $table->enum('estado', ['disponible', 'adoptado'])
+            ->default('disponible');
             $table->text('descripcion')->nullable();
             $table->string('foto')->nullable();
             $table->timestamps();

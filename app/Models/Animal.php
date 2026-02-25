@@ -16,7 +16,12 @@ class Animal extends Model
         'nombre',
         'tipo',
         'edad',
+        'estado',
         'descripcion',
         'foto',
     ];
+
+    protected $casts = [
+    'edad' => 'integer',
+];
 }
