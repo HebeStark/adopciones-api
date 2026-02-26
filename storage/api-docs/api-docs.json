@@ -12,6 +12,204 @@
         }
     ],
     "paths": {
+        "/animals": {
+            "get": {
+                "tags": [
+                    "Animals"
+                ],
+                "summary": "List animals",
+                "description": "Returns paginated list of animals",
+                "operationId": "751fb34a4b5a3d130b5ecc5a7182b35b",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Animals"
+                ],
+                "summary": "Create animal",
+                "operationId": "c8660f96706bfa1b1243056409853fcc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre",
+                                    "tipo",
+                                    "edad"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Milo"
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "example": "perro"
+                                    },
+                                    "edad": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "descripcion": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "foto": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Animal created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/animals/{id}": {
+            "get": {
+                "tags": [
+                    "Animals"
+                ],
+                "summary": "Get animal by ID",
+                "operationId": "06dd5cc96aa90fc382a363d7cea0811f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Animal found"
+                    },
+                    "404": {
+                        "description": "Animal not found"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Animals"
+                ],
+                "summary": "Update animal",
+                "operationId": "3ae8994d4d540b3ced1294f5a379f99a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Animal updated"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Animal not found"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Animals"
+                ],
+                "summary": "Delete animal",
+                "operationId": "13deaeb4b03ebf9e8522d7a78d369241",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Animal deleted"
+                    },
+                    "404": {
+                        "description": "Animal not found"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
         "/health": {
             "get": {
                 "tags": [
@@ -258,6 +456,10 @@
         }
     ],
     "tags": [
+        {
+            "name": "Animals",
+            "description": "Endpoints for managing animals"
+        },
         {
             "name": "System",
             "description": "System monitoring endpoints"
