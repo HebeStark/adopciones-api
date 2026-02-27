@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory as FactoriesHasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Eloquent\Factories\HasFactory;
+use App\Models\AdoptionRequest;
 
 class Animal extends Model
 {
@@ -22,6 +23,11 @@ class Animal extends Model
     ];
 
     protected $casts = [
-    'edad' => 'integer',
-];
+        'edad' => 'integer',
+    ];
+
+    public function adoptionRequests()
+    {
+        return $this->hasMany(AdoptionRequest::class);
+    }
 }

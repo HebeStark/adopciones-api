@@ -54,4 +54,9 @@ class User extends Authenticatable
         ];
     }
 
+    public function adoptionRequests()
+    {
+        return $this->hasMany(AdoptionRequest::class);
+    }
+
 }
