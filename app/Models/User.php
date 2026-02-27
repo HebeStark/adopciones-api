@@ -51,7 +51,6 @@ class User extends Authenticatable
         return [
         'role' => UserRole::class,
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
         ];
     }
 
