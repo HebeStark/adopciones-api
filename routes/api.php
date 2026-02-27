@@ -11,5 +11,12 @@ Route::prefix('v1')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
     });
 
-    Route::apiResource('animals', AnimalController::class);
+        Route::middleware(['auth.api:api'])->group(function () {
+
+        Route::middleware(['role:admin'])->group(function () {
+            Route::apiResource('animals', AnimalController::class);
+
+        });
+    });
+
 });
