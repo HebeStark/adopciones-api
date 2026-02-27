@@ -23,7 +23,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->string('status')
-                ->default(AdoptionStatus::PENDING->value);
+                ->default(AdoptionStatus::PENDIENTE->value);
             $table->timestamps();
 
 
