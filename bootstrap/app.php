@@ -20,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
     $exceptions->render(function (AuthenticationException $exception, Request $request) {
         return response()->json([
             'success' => false,
-            'message' => 'Unauthenticated.',
+            'message' => 'Credenciales inválidas.',
         ], 401);
     });
     })->create();
