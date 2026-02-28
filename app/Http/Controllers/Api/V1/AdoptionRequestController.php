@@ -4,17 +4,41 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\AdoptionRequest;
+use App\Http\Resources\AdoptionRequestResource;
 use App\Services\AdoptionRequest\AdoptionRequestWriteService;
 use App\Services\AdoptionRequest\AdoptionRequestStatusService;
+use App\Services\AdoptionRequest\AdoptionRequestReadService;
 use Illuminate\Http\Request;
+
 
 class AdoptionRequestController extends Controller
 {
     public function __construct(
         protected AdoptionRequestWriteService $writeService,
-        protected AdoptionRequestStatusService $statusService
+        protected AdoptionRequestStatusService $statusService,
+        protected AdoptionRequestReadService $readService
     ) {}
 
+    public function index(Request $request)
+    {
+        $perPage = $request->query('per_page', 10);
+
+        $paginator = $this->readService->paginate(
+            $request->user(),
+            $perPage
+        );
+
+        return response()->json([
+            'success' => true,
+            'data' => AdoptionRequestResource::collection($paginator),
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'total' => $paginator->total(),
+            ],
+        ]);
+    }
+    
     public function store(Request $request)
     {
         $this->authorize('create', AdoptionRequest::class);
@@ -30,7 +54,9 @@ class AdoptionRequestController extends Controller
 
          return response()->json([
             'success' => true,
-            'data' => $solicitud,
+            'data' => new AdoptionRequestResource(
+                $solicitud->load(['animal', 'user'])
+            ),
             'message' => 'Solicitud creada correctamente.',
         ], 201);
     }
@@ -43,7 +69,9 @@ class AdoptionRequestController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $solicitud,
+            'data' => new AdoptionRequestResource(
+                $solicitud->load(['animal', 'user'])
+            ),
             'message' => 'Solicitud aprobada correctamente.',
         ]);
     }
