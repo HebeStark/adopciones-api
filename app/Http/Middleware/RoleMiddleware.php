@@ -23,14 +23,11 @@ class RoleMiddleware
             throw new AuthorizationException('No autorizado.');
         }
 
-        $allowedRoles = collect($roles)
-            ->map(fn ($role) => UserRole::tryFrom($role))
-            ->filter();
-
-             if (!$allowedRoles->contains(fn ($role) => $role->value === $user->role)) {
-            throw new AuthorizationException('No autorizado.');
+         if (!in_array($user->role->value, $roles, true)) {
+        throw new AuthorizationException('No autorizado.');
         }
 
-        return $next($request);
+     return $next($request);
+
     }
 }
