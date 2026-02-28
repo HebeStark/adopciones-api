@@ -21,6 +21,8 @@ Route::prefix('v1')->group(function () {
 
         Route::post('adoption-requests', [AdoptionRequestController::class, 'store']);
 
+        Route::get('adoption-requests', [AdoptionRequestController::class, 'index']);
+
         Route::patch(
             'adoption-requests/{adoptionRequest}/approve',
             [AdoptionRequestController::class, 'aprobar']

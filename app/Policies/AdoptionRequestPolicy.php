@@ -31,14 +31,16 @@ class AdoptionRequestPolicy
         return $user->role === UserRole::ADOPTER;
     }
 
-    public function approve(User $user): bool
+    public function approve(User $user, AdoptionRequest $adoptionRequest): bool
     {
         return $user->role === UserRole::ADMIN;
+    
     }
 
-    public function reject(User $user): bool
+    public function reject(User $user, AdoptionRequest $adoptionRequest): bool
     {
         return $user->role === UserRole::ADMIN;
+       
     }
 
     public function cancel(User $user, AdoptionRequest $adoptionRequest): bool
@@ -48,7 +50,7 @@ class AdoptionRequestPolicy
         }
 
         return $user->id === $adoptionRequest->user_id
-            && $adoptionRequest->status === AdoptionStatus::PENDING;
+            && $adoptionRequest->status === AdoptionStatus::PENDIENTE;
     }
     
 }

@@ -23,9 +23,12 @@ class AdoptionRequestController extends Controller
     {
         $perPage = $request->query('per_page', 10);
 
+        $filters = $request->only(['status', 'animal_id']);
+
         $paginator = $this->readService->paginate(
             $request->user(),
-            $perPage
+            $perPage,
+            $filters
         );
 
         return response()->json([
