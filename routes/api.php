@@ -12,11 +12,15 @@ Route::prefix('v1')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
     });
 
-        Route::middleware(['auth.api:api'])->group(function () {
+     Route::get('animals', [AnimalController::class, 'index']);
+     Route::get('animals/{animal}', [AnimalController::class, 'show']);
 
-        Route::middleware(['role:admin'])->group(function () {
-            Route::apiResource('animals', AnimalController::class);
+    Route::middleware(['auth.api:api'])->group(function () {
 
+    Route::middleware(['role:admin'])->group(function () {
+            Route::post('animals', [AnimalController::class, 'store']);
+            Route::put('animals/{animal}', [AnimalController::class, 'update']);
+            Route::delete('animals/{animal}', [AnimalController::class, 'destroy']);
         });
 
         Route::post('adoption-requests', [AdoptionRequestController::class, 'store']);
