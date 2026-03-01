@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -18,10 +19,20 @@ return Application::configure(basePath: dirname(__DIR__))
          ]);
     })   
     ->withExceptions(function ($exceptions) {
+        
         $exceptions->render(function (AuthenticationException $exception, Request $request) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthenticated.',
             ], 401);
         });
+
+         $exceptions->render(function (ValidationException $exception, Request $request) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation errors.',
+                'errors' => $exception->errors(),
+            ], 422);
+        });
+
     })->create();
