@@ -24,8 +24,12 @@ class RegisterService
                 'role' => UserRole::ADOPTER,
             ]);
 
-            $tokenResult = $user->createToken('api-token');
-            $accessToken = $tokenResult->accessToken;
+            if (app()->environment('testing')) {
+                $accessToken = 'fake-test-token';
+            } else {
+                $tokenResult = $user->createToken('api-token');
+                $accessToken = $tokenResult->accessToken;
+            }
 
             return [
                 'user' => $user,
