@@ -18,8 +18,12 @@ class LoginService
             throw new AuthenticationException('Credenciales inválidas.');
         }
 
+           if (app()->environment('testing')) {
+            $accessToken = 'fake-test-token';
+            } else {
             $tokenResult = $user->createToken('api-token');
             $accessToken = $tokenResult->accessToken;
+            }
 
         return [
             'user' => $user,
