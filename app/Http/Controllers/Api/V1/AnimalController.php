@@ -41,21 +41,30 @@ class AnimalController extends Controller
             new OA\Parameter(
                 name: "per_page",
                 in: "query",
-                required: false,
-                schema: new OA\Schema(type: "integer", example: 20)
+                schema: new OA\Schema(type: "integer", example: 10)
             )
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Successful response"
+                description: "Animals retrieved successfully",
+                content: new OA\JsonContent(
+                    example: [
+                        "success" => true,
+                        "data" => [],
+                        "meta" => [
+                            "current_page" => 1,
+                            "last_page" => 1,
+                            "per_page" => 10,
+                            "total" => 1
+                        ]
+                    ]
+                )
             ),
-            new OA\Response(
-                response: 401,
-                description: "Unauthenticated"
-            )
+             new OA\Response(response: 401, description: "Unauthenticated")
         ]
     )]
+           
     public function index(AnimalIndexRequest $request): JsonResponse
     {
         $perPage = $request->validated()['per_page'];
@@ -87,11 +96,33 @@ class AnimalController extends Controller
                 schema: new OA\Schema(type: "integer", example: 1)
             )
         ],
-        responses: [
-            new OA\Response(response: 200, description: "Animal found"),
-            new OA\Response(response: 404, description: "Animal not found")
+         responses: [
+            new OA\Response(
+                response: 200,
+                description: "Animal found",
+                content: new OA\JsonContent(
+                    allOf: [
+                        new OA\Schema(ref: "#/components/schemas/SuccessResponse"),
+                        new OA\Schema(
+                            properties: [
+                                new OA\Property(
+                                    property: "data",
+                                    ref: "#/components/schemas/Animal"
+                                )
+                            ]
+                        )
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: "Animal not found",
+                content: new OA\JsonContent(ref: "#/components/schemas/ErrorResponse")
+            ),
+            new OA\Response(response: 401, description: "Unauthenticated")
         ]
     )]
+
     public function show(Animal $animal): JsonResponse
     {
     return response()->json([
@@ -103,26 +134,50 @@ class AnimalController extends Controller
      #[OA\Post(
         path: "/animals",
         summary: "Create animal",
+        description: "Creates a new animal (admin only)",
         tags: ["Animals"],
         security: [["BearerAuth" => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ["nombre", "tipo", "edad"],
+                required: ["nombre", "tipo", "edad", "estado"],
                 properties: [
-                    new OA\Property(property: "nombre", type: "string", example: "Milo"),
-                    new OA\Property(property: "tipo", type: "string", example: "perro"),
-                    new OA\Property(property: "edad", type: "integer", example: 2),
-                    new OA\Property(property: "descripcion", type: "string", nullable: true),
-                    new OA\Property(property: "foto", type: "string", nullable: true),
+                   new OA\Property(property: "nombre", type: "string", example: "Milo"),
+                   new OA\Property(property: "tipo", type: "string", enum: ["Perro", "Gato"]),
+                   new OA\Property(property: "edad", type: "integer", example: 2),
+                   new OA\Property(property: "estado", type: "string", enum: ["disponible", "adoptado"]),
+                   new OA\Property(property: "foto", type: "string", nullable: true)
                 ]
             )
         ),
-        responses: [
-            new OA\Response(response: 201, description: "Animal created"),
-            new OA\Response(response: 422, description: "Validation error")
+         responses: [
+            new OA\Response(
+                response: 201,
+                description: "Animal created successfully",
+                content: new OA\JsonContent(
+                    allOf: [
+                        new OA\Schema(ref: "#/components/schemas/SuccessResponse"),
+                        new OA\Schema(
+                            properties: [
+                                new OA\Property(
+                                    property: "data",
+                                    ref: "#/components/schemas/Animal"
+                                )
+                            ]
+                        )
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: "Unauthenticated"),
+            new OA\Response(response: 403, description: "Forbidden (admin only)"),
+            new OA\Response(
+                response: 422,
+                description: "Validation error",
+                content: new OA\JsonContent(ref: "#/components/schemas/ErrorResponse")
+            )
         ]
     )]
+
     public function store(
         AnimalStoreRequest $request,
         AnimalWriteService $writeService
@@ -139,6 +194,7 @@ class AnimalController extends Controller
      #[OA\Put(
         path: "/animals/{id}",
         summary: "Update animal",
+        description: "Updates an existing animal (admin only)",
         tags: ["Animals"],
         security: [["BearerAuth" => []]],
         parameters: [
@@ -146,15 +202,90 @@ class AnimalController extends Controller
                 name: "id",
                 in: "path",
                 required: true,
+                description: "Animal ID",
                 schema: new OA\Schema(type: "integer", example: 1)
             )
         ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["nombre", "tipo", "edad", "estado"],
+                properties: [
+                    new OA\Property(
+                        property: "nombre",
+                        type: "string",
+                        example: "Kyla"
+                    ),
+                    new OA\Property(
+                        property: "tipo",
+                        type: "string",
+                        enum: ["Perro", "Gato"],
+                        example: "Perro"
+                    ),
+                    new OA\Property(
+                        property: "edad",
+                        type: "integer",
+                        example: 3
+                    ),
+                    new OA\Property(
+                        property: "estado",
+                        type: "string",
+                        enum: ["disponible", "adoptado"],
+                        example: "disponible"
+                    ),
+                    new OA\Property(
+                        property: "foto",
+                        type: "string",
+                        format: "uri",
+                        nullable: true,
+                        example: "https://api.adopciones.com/storage/animals/kyla.jpg"
+                    )
+                ]
+            )
+        ),
         responses: [
-            new OA\Response(response: 200, description: "Animal updated"),
-            new OA\Response(response: 422, description: "Validation error"),
-            new OA\Response(response: 404, description: "Animal not found")
+            new OA\Response(
+                response: 200,
+                description: "Animal updated successfully",
+                content: new OA\JsonContent(
+                    allOf: [
+                        new OA\Schema(ref: "#/components/schemas/SuccessResponse"),
+                        new OA\Schema(
+                            properties: [
+                                new OA\Property(
+                                    property: "data",
+                                    ref: "#/components/schemas/Animal"
+                                )
+                            ]
+                        )
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: "Unauthenticated"
+            ),
+            new OA\Response(
+                response: 403,
+                description: "Forbidden (admin only)"
+            ),
+            new OA\Response(
+                response: 404,
+                description: "Animal not found",
+                content: new OA\JsonContent(
+                    ref: "#/components/schemas/ErrorResponse"
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: "Validation error",
+                content: new OA\JsonContent(
+                    ref: "#/components/schemas/ErrorResponse"
+                )
+            )
         ]
     )]
+
     public function update(
         AnimalUpdateRequest $request,
         Animal $animal,
@@ -174,6 +305,7 @@ class AnimalController extends Controller
     #[OA\Delete(
         path: "/animals/{id}",
         summary: "Delete animal",
+        description: "Deletes an animal (admin only)",
         tags: ["Animals"],
         security: [["BearerAuth" => []]],
         parameters: [
@@ -184,11 +316,27 @@ class AnimalController extends Controller
                 schema: new OA\Schema(type: "integer", example: 1)
             )
         ],
-        responses: [
-            new OA\Response(response: 200, description: "Animal deleted"),
-            new OA\Response(response: 404, description: "Animal not found")
+       responses: [
+            new OA\Response(
+                response: 200,
+                description: "Animal deleted successfully",
+                content: new OA\JsonContent(
+                    example: [
+                        "success" => true,
+                        "message" => "Animal eliminado correctamente"
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: "Unauthenticated"),
+            new OA\Response(response: 403, description: "Forbidden (admin only)"),
+            new OA\Response(
+                response: 404,
+                description: "Animal not found",
+                content: new OA\JsonContent(ref: "#/components/schemas/ErrorResponse")
+            )
         ]
     )]
+
     public function destroy(
         Animal $animal,
         AnimalDeleteService $service
