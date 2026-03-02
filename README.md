@@ -1,59 +1,148 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Adopciones API REST
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Desarrollada en Laravel 12 para la gestión de adopciones de animales (perros y gatos), con autenticación mediante Laravel Passport, control de roles y documentación completa con OpenAPI 3.0.3.
 
-## About Laravel
+## Objetivo del Proyecto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Transformar una aplicación MVC tradicional en una API REST versionada aplicando:
+Arquitectura limpia
+Autenticación con tokens (Passport)
+Control de acceso por roles
+Documentación OpenAPI
+Testing funcional completo
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Arquitectura
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+El proyecto sigue una arquitectura desacoplada y profesional:
+Controllers → Orquestación de peticiones
+Services → Lógica de negocio
+Form Requests → Validación
+API Resources → Transformación de respuestas
+Policies / Middleware → Autorización
+OpenAPI Schemas → Documentación estructurada
+Feature Tests → Verificación funcional
 
-## Learning Laravel
+## Seguridad
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+La API implementa:
+Autenticación mediante Laravel Passport
+Tokens Bearer
+Middleware auth.api:api
+Sistema de roles (admin, adopter)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Roles
 
-## Laravel Sponsors
+Rol	Permisos
+Admin CRUD de animales, aprobar/rechazar solicitudes, acceso a dashboard
+Adopter Crear solicitudes y ver las propias
+Todas las rutas requieren autenticación.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Documentación
 
-### Premium Partners
+Documentación generada automáticamente con:
+swagger-php v6 (PHP Attributes)
+l5-swagger
+OpenAPI 3.0.3
+Disponible en:
+/api/documentation
+Endpoints Principales
+Animals
+GET /api/v1/animals
+POST /api/v1/animals
+GET /api/v1/animals/{id}
+PUT /api/v1/animals/{id}
+DELETE /api/v1/animals/{id}
+Adoption Requests
+GET /api/v1/adoption-requests
+POST /api/v1/adoption-requests
+PATCH /api/v1/adoption-requests/{id}/approve
+PATCH /api/v1/adoption-requests/{id}/reject
+PATCH /api/v1/adoption-requests/{id}/cancel
+Auth
+POST /api/v1/auth/register
+POST /api/v1/auth/login
+POST /api/v1/auth/logout
+Admin Dashboard
+GET /api/v1/admin/dashboard
+Estructura de Respuesta
+Todas las respuestas siguen el formato estándar:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+{
+  "success": true,
+  "message": "Optional message",
+  "data": {},
+  "meta": {}
+}
 
-## Contributing
+## Reglas de Negocio
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Solo admins pueden aprobar o rechazar solicitudes.
+Solo el propietario puede cancelar su solicitud.
+Una solicitud solo puede aprobarse si está en estado PENDIENTE.
+Al aprobar una solicitud, el animal pasa a estado ADOPTADO.
+Los usuarios solo pueden ver sus propias solicitudes (excepto admin).
 
-## Code of Conduct
+## Testing
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+La aplicación incluye tests funcionales completos que verifican:
+Autenticación con Passport
+Restricción por roles
+CRUD de animales
+Flujo completo de solicitudes de adopción
+Transiciones de estado
+Validaciones de negocio (422)
+Protección de rutas (401 / 403)
+Manejo de recursos inexistentes (404)
 
-## Security Vulnerabilities
+Estructura de tests
+tests/Feature/
+│
+├── Admin/
+│   └── AdminDashboardTest.php
+│
+├── AdoptionRequests/
+│   ├── StoreAdoptionRequestTest.php
+│   ├── IndexAdoptionRequestTest.php
+│   ├── ApproveAdoptionRequestTest.php
+│   ├── RejectAdoptionRequestTest.php
+│   └── CancelAdoptionRequestTest.php
+│
+├── Animals/
+│   ├── AnimalIndexTest.php
+│   ├── AnimalStoreTest.php
+│   ├── AnimalUpdateTest.php
+│   └── AnimalDestroyTest.php
+│
+└── Auth/
+    ├── RegisterTest.php
+    └── LoginTest.php
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Ejecutar tests
 
-## License
+php artisan test
+Los tests utilizan:
+RefreshDatabase
+Factories
+SQLite en entorno de testing
+actingAs() con guard api
+Assertions de base de datos
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Stack Tecnológico
+
+PHP 8.4
+Laravel 12
+SQLite
+Laravel Passport
+OpenAPI 3.0.3
+Swagger UI
+
+## Instalación
+
+git clone <https://github.com/HebeStark/adopciones-api.git>
+cd adopciones-api
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan passport:install
+php artisan serve
