@@ -49,8 +49,7 @@ class AdoptionRequestPolicy
             return false;
         }
 
-        return $user->id === $adoptionRequest->user_id
-            && $adoptionRequest->status === AdoptionStatus::PENDIENTE;
+        return $user->id === $adoptionRequest->user_id;
     }
     
 }
