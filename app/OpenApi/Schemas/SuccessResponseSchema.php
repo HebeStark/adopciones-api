@@ -14,6 +14,12 @@ use OpenApi\Attributes as OA;
             type: 'boolean',
             example: true
         ),
+         new OA\Property(
+            property: 'message',
+            type: 'string',
+            nullable: true,
+            example: 'Operation completed successfully.'
+        ),
         new OA\Property(
             property: 'data',
             nullable: true,
