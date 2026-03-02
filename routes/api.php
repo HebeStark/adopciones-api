@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AnimalController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\AdoptionRequestController;
+use App\Http\Controllers\Api\V1\AdminDashboardController;
+
 
 Route::prefix('v1')->group(function () {
 
@@ -21,6 +23,8 @@ Route::prefix('v1')->group(function () {
             Route::post('animals', [AnimalController::class, 'store']);
             Route::put('animals/{animal}', [AnimalController::class, 'update']);
             Route::delete('animals/{animal}', [AnimalController::class, 'destroy']);
+
+            Route::get('admin/dashboard', AdminDashboardController::class);
         });
 
         Route::post('adoption-requests', [AdoptionRequestController::class, 'store']);
