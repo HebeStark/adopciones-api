@@ -20,7 +20,7 @@ class AnimalSeeder extends Seeder
                 'edad' => 2,
                 'estado' => AnimalStatus::DISPONIBLE,
                 'descripcion' => 'Gata tranquila y cariñosa.',
-                'foto' => null,
+                'foto' => '/images/animals/luna.jpg',
             ],
             [
                 'nombre' => 'Rocky',
@@ -28,7 +28,7 @@ class AnimalSeeder extends Seeder
                 'edad' => 4,
                 'estado' => AnimalStatus::DISPONIBLE,
                 'descripcion' => 'Perro activo y juguetón.',
-                'foto' => null,
+                'foto' => '/images/animals/rocky.jpg',
             ],
             [
                 'nombre' => 'Michu',
@@ -36,7 +36,7 @@ class AnimalSeeder extends Seeder
                 'edad' => 1,
                 'estado' => AnimalStatus::DISPONIBLE,
                 'descripcion' => 'Pequeño y muy curioso.',
-                'foto' => null,
+                'foto' => '/images/animals/michu.jpg',
             ],
             [
                 'nombre' => 'Kyla',
@@ -44,7 +44,7 @@ class AnimalSeeder extends Seeder
                 'edad' => 3,
                 'estado' => AnimalStatus::DISPONIBLE,
                 'descripcion' => 'Muy sociable y obediente.',
-                'foto' => null,
+                'foto' => '/images/animals/kyla.jpg',
             ],
             [
                 'nombre' => 'Thor',
@@ -52,7 +52,7 @@ class AnimalSeeder extends Seeder
                 'edad' => 5,
                 'estado' => AnimalStatus::ADOPTADO,
                 'descripcion' => 'Fuerte y protector.',
-                'foto' => null,
+                'foto' => '/images/animals/thor.jpg',
             ],
             [
                 'nombre' => 'Nala',
@@ -60,7 +60,7 @@ class AnimalSeeder extends Seeder
                 'edad' => 2,
                 'estado' => AnimalStatus::ADOPTADO,
                 'descripcion' => 'Muy dulce y tranquila.',
-                'foto' => null,
+                'foto' => '/images/animals/nala.jpg',
             ],
         ];
 

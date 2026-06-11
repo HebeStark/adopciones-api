@@ -15,6 +15,7 @@ class AdminDashboardService
             'animals' => [
                 'total' => Animal::count(),
                 'available' => Animal::where('estado', AnimalStatus::DISPONIBLE)->count(),
+                'adopted' => Animal::where('estado', AnimalStatus::ADOPTADO)->count(),
             ],
             'adoption_requests' => [
                 'pending' => AdoptionRequest::where('status', AdoptionStatus::PENDIENTE)->count(),

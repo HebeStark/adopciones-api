@@ -84,7 +84,7 @@ class AdoptionRequestController extends Controller
         ]
     )]
 
-    public function index(Request $request)
+   public function index(Request $request)
     {
         $perPage = $request->query('per_page', 10);
 
@@ -106,6 +106,7 @@ class AdoptionRequestController extends Controller
             ],
         ]);
     }
+   
     #[OA\Post(
         path: "/adoption-requests",
         summary: "Create a new adoption request",
