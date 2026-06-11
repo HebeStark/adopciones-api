@@ -10,6 +10,7 @@ class AdoptionRequestReadService
 {
     public function paginate(User $user, int $perPage = 10, array $filters = [])
     {
+        //dd($user->id, $user->role);
         $query = AdoptionRequest::with(['animal', 'user']);
 
          if ($user->role === UserRole::ADOPTER) {

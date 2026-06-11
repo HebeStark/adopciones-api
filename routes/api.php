@@ -17,7 +17,7 @@ Route::prefix('v1')->group(function () {
      Route::get('animals', [AnimalController::class, 'index']);
      Route::get('animals/{animal}', [AnimalController::class, 'show']);
 
-    Route::middleware(['auth.api:api'])->group(function () {
+    Route::middleware(['auth:api'])->group(function () {
         Route::post('auth/logout', [AuthController::class, 'logout']);
 
     Route::middleware(['role:admin'])->group(function () {
